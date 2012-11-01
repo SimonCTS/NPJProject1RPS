@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public class Peer {
     InetAddress ipAdress;
-    Integer Port;
+    Integer port;
 
     public Peer(InetAddress ipAdress, Integer localPort) {
         this.ipAdress = ipAdress;
-        this.Port = localPort;
+        this.port = localPort;
     }
 }
