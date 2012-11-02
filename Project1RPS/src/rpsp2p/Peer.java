@@ -4,6 +4,7 @@
  */
 package rpsp2p;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author fingolfin
  */
-public class Peer {
+public class Peer implements Serializable{
     InetAddress ipAdress;
     Integer port;
 

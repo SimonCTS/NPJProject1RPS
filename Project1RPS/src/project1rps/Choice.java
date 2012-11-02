@@ -9,5 +9,5 @@ package project1rps;
  * @author fingolfin
  */
 public enum Choice {
-    ROCK, PAPER, SCISSORS
+    ROCK, PAPER, SCISSORS  
 }
