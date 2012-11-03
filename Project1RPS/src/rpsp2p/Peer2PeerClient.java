@@ -4,6 +4,8 @@
  */
 package rpsp2p;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -13,17 +15,18 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import project1rps.Choice;
+import rpsgui.Window;
 
 /**
  *
  * @author Simon Cathebras, Zoe Bellot
  */
-public class Peer2PeerClient extends Thread {
+public class Peer2PeerClient extends Thread{
 
-    private String localPlayerName;
     private Integer localPort;
     private ArrayList<Peer> peerList;
     private Boolean listening;
+    private Window rpsWindow;
 
     /**
      *
@@ -32,15 +35,18 @@ public class Peer2PeerClient extends Thread {
      * @param remotePort
      * @param port
      */
-    public Peer2PeerClient(String playerName,
-            InetAddress remoteIpAdress,
-            Integer remotePort,
-            Integer port) {
-        this.localPlayerName = playerName;
+    public Peer2PeerClient(
+            Integer port,
+            Window window) {
         this.localPort = port;
         this.peerList = new ArrayList<Peer>();
-        peerList.add(new Peer(remoteIpAdress, remotePort));
         this.listening = true;
+        this.rpsWindow = window;
+    }
+
+    
+    public void addPeer(InetAddress ipAddress, Integer remotePort){
+        this.peerList.add(new Peer(ipAddress,remotePort));
     }
 
     /**

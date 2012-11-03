@@ -4,6 +4,12 @@
  */
 package rpsgui;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rpsp2p.Peer2PeerClient;
+
 /**
  *
  * @author fingolfin
@@ -13,6 +19,9 @@ public class Window extends javax.swing.JFrame {
     /**
      * Creates new form Window
      */
+    
+    Peer2PeerClient p2pClient = new Peer2PeerClient(4444, this);
+    
     public Window() {
         initComponents();
     }
@@ -35,6 +44,11 @@ public class Window extends javax.swing.JFrame {
         totalScore = new javax.swing.JTextField();
         labPlayerName = new javax.swing.JLabel();
         labGameState = new javax.swing.JLabel();
+        btnDisconnect = new javax.swing.JButton();
+        txtPort = new javax.swing.JTextField();
+        txtIpAdress = new javax.swing.JTextField();
+        txtPlayerName = new javax.swing.JTextField();
+        btnConnect = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -70,6 +84,26 @@ public class Window extends javax.swing.JFrame {
 
         labGameState.setText("jLabel3");
 
+        btnDisconnect.setText("Disconnect");
+
+        txtPort.setText("Port");
+
+        txtIpAdress.setText("Ip address");
+        txtIpAdress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIpAdressActionPerformed(evt);
+            }
+        });
+
+        txtPlayerName.setText("Player name");
+
+        btnConnect.setText("Connect");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
@@ -85,20 +119,32 @@ public class Window extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
-                        .addComponent(jLabel2))
+                    .addComponent(jLabel2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labPlayerName)
                             .addComponent(btnRock)
                             .addComponent(btnScissors)
                             .addComponent(btnPaper))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(labGameState)
-                            .addComponent(jLabel1))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnConnect)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(labGameState)
+                                    .addComponent(jLabel1)
+                                    .addComponent(btnDisconnect)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(250, 250, 250)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPort, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(totalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -127,8 +173,22 @@ public class Window extends javax.swing.JFrame {
                         .addComponent(btnPaper))
                     .addComponent(labGameState))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnScissors)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnScissors)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 23, Short.MAX_VALUE)
+                        .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDisconnect)
+                    .addComponent(btnConnect))
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lastScore, totalScore});
@@ -143,6 +203,21 @@ public class Window extends javax.swing.JFrame {
     private void totalScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalScoreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_totalScoreActionPerformed
+
+    private void txtIpAdressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIpAdressActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIpAdressActionPerformed
+
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+        try {
+            p2pClient.addPeer(
+                    InetAddress.getByName(txtIpAdress.getText()),
+                    Integer.parseInt(txtPort.getText()));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new Thread(p2pClient).start();
+   }//GEN-LAST:event_btnConnectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,6 +261,8 @@ public class Window extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConnect;
+    private javax.swing.JButton btnDisconnect;
     private javax.swing.JButton btnPaper;
     private javax.swing.JButton btnRock;
     private javax.swing.JButton btnScissors;
@@ -198,5 +275,8 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JLabel labPlayerName;
     private javax.swing.JTextField lastScore;
     private javax.swing.JTextField totalScore;
+    private javax.swing.JTextField txtIpAdress;
+    private javax.swing.JTextField txtPlayerName;
+    private javax.swing.JTextField txtPort;
     // End of variables declaration//GEN-END:variables
 }

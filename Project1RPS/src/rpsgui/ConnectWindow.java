@@ -4,6 +4,8 @@
  */
 package rpsgui;
 
+import rpsp2p.Peer2PeerClient;
+
 /**
  *
  * @author fingolfin
@@ -13,6 +15,9 @@ public class ConnectWindow extends javax.swing.JFrame {
     /**
      * Creates new form ConnectWindow
      */
+    
+    /*New variables*/
+    
     public ConnectWindow() {
         initComponents();
     }
@@ -48,6 +53,11 @@ public class ConnectWindow extends javax.swing.JFrame {
         jTextField2.setText("Port");
 
         btnConnect.setText("Connect");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Ip address:");
 
@@ -118,6 +128,10 @@ public class ConnectWindow extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+        
+    }//GEN-LAST:event_btnConnectActionPerformed
 
     /**
      * @param args the command line arguments
