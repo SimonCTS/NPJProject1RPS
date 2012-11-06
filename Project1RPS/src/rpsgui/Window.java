@@ -208,6 +208,10 @@ public class Window extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIpAdressActionPerformed
 
+    public void setScore(Integer newScore){
+        
+    }
+    
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         try {
             p2pClient.addPeer(

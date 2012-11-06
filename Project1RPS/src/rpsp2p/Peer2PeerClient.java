@@ -115,6 +115,8 @@ public class Peer2PeerClient extends Thread{
             Peer peer = it.next();
             peerList.add(peer);
         }
+        
+        /*ENVOYER LE JOIN AUX AUTRES NODES*/
 
         try {
             out.close();
@@ -154,6 +156,10 @@ public class Peer2PeerClient extends Thread{
         } catch (IOException ex) {
             System.err.println("error while closing the stream");
         }
+        
+        /*ADD THE RECEIVED PEER TO THE LIST*/
+        peerList.add(peer);
+        
 
     }
 
