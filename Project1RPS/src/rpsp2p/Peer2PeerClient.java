@@ -58,6 +58,13 @@ public class Peer2PeerClient extends Thread{
      *
      */
     private Integer connectToRing() {
+        
+        
+        if (peerList.isEmpty()){
+            /*if the list is empty, this is the first peer in the system*/
+            return 0;
+        }
+        
         Peer target = peerList.get(0);
         Socket clientSocket = null;
 

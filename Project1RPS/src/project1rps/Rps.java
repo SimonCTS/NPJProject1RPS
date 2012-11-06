@@ -5,6 +5,7 @@
 package project1rps;
 
 import rpsgui.ConnectWindow;
+import rpsgui.Window;
 
 /**
  *
@@ -16,8 +17,8 @@ public class Rps {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ConnectWindow guiConnectWindow = new ConnectWindow();
-        guiConnectWindow.setVisible(true);
+        Window guiWindow = new Window();
+        guiWindow.setVisible(true);
     }
     
 }
