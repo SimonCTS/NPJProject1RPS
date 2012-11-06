@@ -25,6 +25,10 @@ public class Peer2PeerClient extends Thread{
 
     private Integer localPort;
     private ArrayList<Peer> peerList;
+    private ArrayList<Choice> choiceList;
+    private ArrayList<Choice> nextChoiceList;
+    private Integer game;
+    private Choice playerChoice;
     private Boolean listening;
     private Window rpsWindow;
 
@@ -116,8 +120,31 @@ public class Peer2PeerClient extends Thread{
             peerList.add(peer);
         }
         
-        /*ENVOYER LE JOIN AUX AUTRES NODES*/
+        try {
+            in = new ObjectInputStream(clientSocket.getInputStream());
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            System.exit(1);
+        }
 
+        Object number = null;
+        try
+        {
+            number = in.readObject();
+        } catch (IOException ex) {
+            System.err.println(ex.toString());
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println(cnfe.toString());
+            return 1;
+        }
+        
+        if (!(number instanceof Integer)) {
+            System.err.println("Transmission error");
+            System.exit(1);            
+        }
+        
+        this.game = (Integer) number;
+        
         try {
             out.close();
             in.close();
@@ -125,6 +152,9 @@ public class Peer2PeerClient extends Thread{
         } catch (IOException ex) {
             System.err.println(ex.toString());
         }
+        
+        
+        /*ENVOYER LE JOIN AUX AUTRES NODES*/
 
         return 0;
     }
@@ -145,6 +175,8 @@ public class Peer2PeerClient extends Thread{
         try {
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(peerList);
+            out.flush();
+            out.writeObject(game+1);
             out.flush();
         } catch (IOException ex) {
             System.out.println(ex.toString());
@@ -176,8 +208,133 @@ public class Peer2PeerClient extends Thread{
      * Compute the result sended by peer
      * @param peer 
      */
-    private void doPlay(Peer peer) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void doPlay(Socket clientSocket){
+        ObjectInputStream in = null;
+
+        /* Receive the choie of the other host */   
+        try {       
+            in = new ObjectInputStream(clientSocket.getInputStream());
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+
+        Object choice = null;
+        try {
+            choice = in.readObject();
+        } catch (IOException ex) {
+            System.err.println("error in reading");
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println(cnfe.toString());
+        }
+        
+        if (! (choice instanceof Choice)) {
+            System.err.println("Transmission error");
+            System.exit(1);
+        }
+        
+        /* Receive the game number */
+        try {       
+            in = new ObjectInputStream(clientSocket.getInputStream());
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+
+        Object gameNumber = null;
+        try {
+            gameNumber = in.readObject();
+        } catch (IOException ex) {
+            System.err.println("error in reading");
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println(cnfe.toString());
+        }
+        
+        if (! (gameNumber instanceof Integer)) {
+            System.err.println("Transmission error");
+            System.exit(1);
+        }
+          
+        if (game == gameNumber) {
+            choiceList.add((Choice)choice);
+            if (choiceList.size() == peerList.size() - 1) {
+                endOfGame();
+            }      
+        } else {
+            nextChoiceList.add((Choice)choice);
+        }
+        
+        try {
+            in.close();
+        } catch (IOException ex) {
+            System.err.println("error while closing the input stream");
+        }
+    }
+    
+    /**
+     * 
+     * Compute the game score
+     * 
+     */
+    private void endOfGame () {
+        /*Compute the game score */
+        Integer score = 0;
+        for (Iterator<Choice> it = choiceList.iterator(); it.hasNext();){
+            if (win(playerChoice, it.next())) {
+                score = score + 1;
+            }
+        }
+        game = game + 1;
+        /* Update choices for the next game */
+        choiceList = nextChoiceList;
+        nextChoiceList.clear();
+        rpsWindow.setScore(score);
+    }
+    
+    /**
+     * 
+     * Return if p1 win or no
+     * 
+     * @param p1 : choice of the first player
+     * @param p2 : choice of the second player
+     * @return boolean that indiates if p1 win or no
+     */
+    private boolean win(Choice p1, Choice p2) {
+        if (p1 == ROCK) {
+            if (p2 == ROCK) {
+                return false;
+            }
+            if (p2 == SCISSORS) {
+                return true;
+            }
+            if (p2 == PAPER) {
+                return false;
+            }
+        }
+        if (p1 == SCISSORS)  {
+            if (p2 == ROCK) {
+                return false;
+            }
+            if (p2 == SCISSORS) {
+                return false;
+            }
+            if (p2 == PAPER) {
+                return true;
+            }            
+        }
+        if (p1 == PAPER){
+            if (p2 == ROCK) {
+                return true;
+            }
+            if (p2 == SCISSORS) {
+                return false;
+            }
+            if (p2 == PAPER) {
+                return false;
+            }            
+        } else {
+            System.err.println("Choice error");
+            System.exit(1);
+            return false;
+        }            
     }
 
     /**
@@ -213,9 +370,7 @@ public class Peer2PeerClient extends Thread{
                     clientSocket.getPort()));
         }
         if (input.equals("PLAY")) {
-            doPlay(new Peer(
-                    clientSocket.getInetAddress(),
-                    clientSocket.getPort()));
+            doPlay(clientSocket);
         }
         try {
             in.close();
