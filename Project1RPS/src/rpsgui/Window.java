@@ -21,7 +21,8 @@ public class Window extends javax.swing.JFrame {
     /**
      * Creates new form Window
      */
-    Peer2PeerClient p2pClient = new Peer2PeerClient(4569, this);
+    Peer2PeerClient p2pClient = new Peer2PeerClient(4443, this);
+    Thread threadP2p;
 
     public Window() {
         initComponents();
@@ -236,7 +237,7 @@ public class Window extends javax.swing.JFrame {
 
     public void setScore(Integer newScore) {
     }
-    private void setGameVisible(Boolean visible){
+    public void setGameVisible(Boolean visible){
         btnPaper.setVisible(visible);
         btnRock.setVisible(visible);
         btnScissors.setVisible(visible);
@@ -248,7 +249,7 @@ public class Window extends javax.swing.JFrame {
         labTotalScore.setVisible(visible);
     }
 
-    private void setConnectionVisible(Boolean visible){
+    public void setConnectionVisible(Boolean visible){
         btnConnect.setVisible(visible);
         btnDisconnect.setVisible(!visible);
         txtIpAdress.setVisible(visible);
@@ -270,11 +271,13 @@ public class Window extends javax.swing.JFrame {
         setGameVisible(true);
         labPlayerName.setText(txtPlayerName.getText());
         
-        new Thread(p2pClient).start();
+        threadP2p = new Thread(p2pClient);
+        threadP2p.start();
    }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconnectActionPerformed
         try {
+            threadP2p.interrupt();
             p2pClient.disconnect();
         } catch (IOException ex) {
             System.out.println(ex);

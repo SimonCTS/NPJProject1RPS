@@ -25,8 +25,8 @@ public class Peer2PeerClient extends Thread{
 
     private Integer localPort;
     private ArrayList<Peer> peerList;
-    private Boolean listening;
     private Window rpsWindow;
+    private ServerSocket serverSocket;
 
     /**
      *
@@ -40,7 +40,6 @@ public class Peer2PeerClient extends Thread{
             Window window) {
         this.localPort = port;
         this.peerList = new ArrayList<Peer>();
-        this.listening = true;
         this.rpsWindow = window;
     }
 
@@ -233,21 +232,18 @@ public class Peer2PeerClient extends Thread{
     }
 
     /**
-     * Sends to each peer member within peerList an "end of game" message Also
-     * sets the listening boolean to false
+     * Sends to each peer member within peerList an "end of game" message 
      *
      * @param peerList
      * @return error code
      */
-    public Integer disconnect() throws IOException {
+    public void disconnect() throws IOException {
         /*
          * broadcast to all peers that we are leaving
          */
+        
         for (Iterator<Peer> it = peerList.iterator(); it.hasNext();) {
             Peer peer = it.next();
-            /*
-             * create socket
-             */
             Socket clientSocket = null;
             try {
                 clientSocket = new Socket(peer.ipAdress, peer.port);
@@ -267,9 +263,6 @@ public class Peer2PeerClient extends Thread{
                 System.exit(1);
             }
 
-            /*
-             * send bye
-             */
             byte[] toTarget = "QUIT".getBytes();
             try {
                 out.write(toTarget, 0, toTarget.length);
@@ -278,18 +271,11 @@ public class Peer2PeerClient extends Thread{
                 System.out.println(ex);
             }
 
-            /*
-             * close streams and socket
-             */
             out.close();
             clientSocket.close();
 
         }
-        /*
-         * stop listening
-         */
-        listening = false;
-        return 0;
+        
     }
 
     /**
@@ -345,9 +331,19 @@ public class Peer2PeerClient extends Thread{
         }
         return 0;
     }
+    
+    @Override
+    public void interrupt(){
+        super.interrupt();
+        try {
+            this.serverSocket.close();
+        } catch (IOException ex) {
+            System.err.println("erreur while closing");
+        }
+    }
 
     public void run() {
-        ServerSocket serverSocket = null;
+        this.serverSocket = null;
 
         /*
          * connection to the ring
@@ -362,21 +358,18 @@ public class Peer2PeerClient extends Thread{
         }
 
 
-        while (listening) {
+        while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 handleConnection(clientSocket);
+            }catch (InterruptedIOException ex){
+                Thread.currentThread().interrupt();
+                break;
             } catch (IOException ex) {
                 System.err.print("Connection error on port: " + localPort);
+                break;
             }
         }
-
-        try {
-            serverSocket.close();
-        } catch (IOException ex) {
-            System.err.println("Closing of the connection "
-                    + "raised the following exception: "
-                    + ex);
-        }
+        
     }
 }
