@@ -159,6 +159,11 @@ public class Peer2PeerClient extends Thread{
         return 0;
     }
 
+    
+    private void doAdd(Socket clientSocket, Peer peer) {
+        /*recevoir numero game (le premir doit l'envoyer à celui qui se join pour qu'il puisse prévenir les autres*/
+    }
+    
     /**
      * do the required job to insert peer into the p2p ring Send the actual
      * peerList to this peer, using clientSocket.
@@ -298,43 +303,43 @@ public class Peer2PeerClient extends Thread{
      * @return boolean that indiates if p1 win or no
      */
     private boolean win(Choice p1, Choice p2) {
-        if (p1 == ROCK) {
-            if (p2 == ROCK) {
+        if (p1.equals(Choice.ROCK)) {
+            if (p2.equals(Choice.ROCK)) {
                 return false;
             }
-            if (p2 == SCISSORS) {
+            if (p2.equals(Choice.SCISSORS)) {
                 return true;
             }
-            if (p2 == PAPER) {
+            if (p2.equals(Choice.PAPER)) {
                 return false;
             }
         }
-        if (p1 == SCISSORS)  {
-            if (p2 == ROCK) {
+        if (p1.equals(Choice.SCISSORS))  {
+            if (p2.equals(Choice.ROCK)) {
                 return false;
             }
-            if (p2 == SCISSORS) {
+            if (p2.equals(Choice.SCISSORS)) {
                 return false;
             }
-            if (p2 == PAPER) {
+            if (p2.equals(Choice.PAPER)) {
                 return true;
             }            
         }
-        if (p1 == PAPER){
-            if (p2 == ROCK) {
+        if (p1.equals(Choice.PAPER)){
+            if (p2.equals(Choice.ROCK)) {
                 return true;
             }
-            if (p2 == SCISSORS) {
+            if (p2.equals(Choice.SCISSORS)) {
                 return false;
             }
-            if (p2 == PAPER) {
+            if (p2.equals(Choice.PAPER)) {
                 return false;
             }            
         } else {
             System.err.println("Choice error");
             System.exit(1);
-            return false;
         }            
+        return false;
     }
 
     /**
@@ -371,6 +376,11 @@ public class Peer2PeerClient extends Thread{
         }
         if (input.equals("PLAY")) {
             doPlay(clientSocket);
+        }
+        if (input.equals("ADDM")) {
+            doAdd(clientSocket,new Peer(
+                    clientSocket.getInetAddress(),
+                    clientSocket.getPort()));
         }
         try {
             in.close();
@@ -479,6 +489,8 @@ public class Peer2PeerClient extends Thread{
                 out.write(toTarget);
                 out.flush();
                 out.writeObject(choice);
+                out.flush();
+                out.writeObject(game);
                 out.flush();
             } catch (IOException ex) {
                 System.out.println(ex);
