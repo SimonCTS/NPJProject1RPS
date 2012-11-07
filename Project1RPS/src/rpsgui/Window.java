@@ -46,10 +46,7 @@ public class Window extends javax.swing.JFrame {
         btnScissors = new javax.swing.JButton();
         labLastScore = new javax.swing.JLabel();
         labTotalScore = new javax.swing.JLabel();
-        txtLastScore = new javax.swing.JTextField();
-        txtTotalScore = new javax.swing.JTextField();
         labPlayerName = new javax.swing.JLabel();
-        labGameState = new javax.swing.JLabel();
         btnDisconnect = new javax.swing.JButton();
         txtPort = new javax.swing.JTextField();
         txtIpAdress = new javax.swing.JTextField();
@@ -60,6 +57,8 @@ public class Window extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtLocalPort = new javax.swing.JTextField();
+        labScore = new javax.swing.JLabel();
+        labTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rock Paper Scissors");
@@ -89,23 +88,7 @@ public class Window extends javax.swing.JFrame {
 
         labTotalScore.setText("Total:");
 
-        txtLastScore.setText("last score");
-        txtLastScore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLastScoreActionPerformed(evt);
-            }
-        });
-
-        txtTotalScore.setText("total score");
-        txtTotalScore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTotalScoreActionPerformed(evt);
-            }
-        });
-
         labPlayerName.setText("Player");
-
-        labGameState.setText("jLabel3");
 
         btnDisconnect.setText("Disconnect");
         btnDisconnect.addActionListener(new java.awt.event.ActionListener() {
@@ -156,14 +139,14 @@ public class Window extends javax.swing.JFrame {
                         .addGap(4, 4, 4)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(labScore)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTotalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labGameState))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                        .addGap(2, 2, 2)
+                        .addComponent(labTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -179,8 +162,6 @@ public class Window extends javax.swing.JFrame {
                     .addComponent(txtLocalPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtLastScore, txtTotalScore});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtIpAdress, txtLocalPort, txtPlayerName, txtPort});
 
@@ -201,7 +182,7 @@ public class Window extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(labLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(labScore))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel4)
                                 .addComponent(txtLocalPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -223,27 +204,14 @@ public class Window extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnDisconnect)
                                     .addComponent(btnConnect)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtTotalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labTotalScore))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labGameState)))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(labTotalScore)
+                                .addComponent(labTotal)))))
                 .addContainerGap(64, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtLastScore, txtTotalScore});
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtLastScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLastScoreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtLastScoreActionPerformed
-
-    private void txtTotalScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalScoreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTotalScoreActionPerformed
 
     private void txtIpAdressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIpAdressActionPerformed
         // TODO add your handling code here:
@@ -251,16 +219,15 @@ public class Window extends javax.swing.JFrame {
 
     public void setScore(Integer newScore) {
         //set le score + pop-up continuer/quitter + eventuellement degriser
-        txtTotalScore.setText(newScore.toString());
+        labScore.setText(newScore.toString());
         setBtnEnable(true);
     }
     public void setGameVisible(Boolean visible){
         btnPaper.setVisible(visible);
         btnRock.setVisible(visible);
         btnScissors.setVisible(visible);
-        txtLastScore.setVisible(visible);
-        txtTotalScore.setVisible(visible);
-        labGameState.setVisible(visible);
+        labScore.setVisible(visible);
+        labTotal.setVisible(visible);
         labLastScore.setVisible(visible);
         labPlayerName.setVisible(visible);
         labTotalScore.setVisible(visible);
@@ -382,15 +349,14 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel labGameState;
     private javax.swing.JLabel labLastScore;
     private javax.swing.JLabel labPlayerName;
+    private javax.swing.JLabel labScore;
+    private javax.swing.JLabel labTotal;
     private javax.swing.JLabel labTotalScore;
     private javax.swing.JTextField txtIpAdress;
-    private javax.swing.JTextField txtLastScore;
     private javax.swing.JTextField txtLocalPort;
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JTextField txtPort;
-    private javax.swing.JTextField txtTotalScore;
     // End of variables declaration//GEN-END:variables
 }

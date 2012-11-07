@@ -95,8 +95,7 @@ public class Peer2PeerClient extends Thread{
         ObjectInputStream in = null;
         ObjectOutputStream out = null;
 
-        try {
-            in = new ObjectInputStream(clientSocket.getInputStream());
+        try {           
             out = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (IOException e) {
             System.out.println(e.toString());
@@ -114,11 +113,16 @@ public class Peer2PeerClient extends Thread{
         } catch (IOException ex) {
             Logger.getLogger(Peer2PeerClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        /*
-         * receive a reponse of the first peer
-         * with the list of new peers
-         */
+        try {
+            /*
+             * receive a reponse of the first peer
+             * with the list of new peers
+             */
+            in = new ObjectInputStream(clientSocket.getInputStream());
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+            System.exit(1);
+        }
         Object newPeerList = null;
         try {
             newPeerList = in.readObject();
@@ -149,13 +153,6 @@ public class Peer2PeerClient extends Thread{
             peerList.add(peer);
         }
         
-        try {
-            in = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            System.exit(1);
-        }
-
         /*
          * update its game number
          */
@@ -245,23 +242,11 @@ public class Peer2PeerClient extends Thread{
      * @param clientSocket
      * @param peer 
      */
-    private void doAdd(Socket clientSocket, Peer peer) {
-        ObjectInputStream in = null;
+    private void doAdd(ObjectInputStream in, ObjectOutputStream out, Peer peer) {
 
         /* 
          * Receive the game number of the new peer 
          */
-        try {       
-            in = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-
-        try {       
-            in = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
 
         Object gameNumber = null;
         try {
@@ -289,16 +274,6 @@ public class Peer2PeerClient extends Thread{
             System.exit(1);
         }
         
-        /*
-         * Close socket
-         */
-        try {
-            in.close();    
-            clientSocket.close();
-        } catch (IOException ex) {
-            System.err.println(ex.toString());
-        }
-        
     }
     
     /**
@@ -308,14 +283,12 @@ public class Peer2PeerClient extends Thread{
      * @param clientSocket
      * @param peer
      */
-    private void doJoin(Socket clientSocket, Peer peer) {
-        ObjectOutputStream out = null;
+    private void doJoin(ObjectInputStream in, ObjectOutputStream out, Peer peer) {
 
         /*
          * Send the peerList to the new host
          */
         try {
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.writeObject(peerList);
             out.flush();
             out.writeObject(game+1);
@@ -323,12 +296,6 @@ public class Peer2PeerClient extends Thread{
         } catch (IOException ex) {
             System.out.println(ex.toString());
             System.exit(1);
-        }
-
-        try {
-            out.close();
-        } catch (IOException ex) {
-            System.err.println("error while closing the stream");
         }
         
         /*ADD THE RECEIVED PEER TO THE LIST*/
@@ -350,23 +317,17 @@ public class Peer2PeerClient extends Thread{
      * Compute the result sended by peer
      * @param peer 
      */
-    private void doPlay(Socket clientSocket){
-        ObjectInputStream in = null;
+    private void doPlay(ObjectInputStream in, ObjectOutputStream out){
 
         /* 
          * Receive the choie of the other peers
          */
-        try {       
-            in = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
 
         Object choice = null;
         try {
             choice = in.readObject();
         } catch (IOException ex) {
-            System.err.println("error in reading");
+            System.err.println("error in reading. " + ex.toString());
         } catch (ClassNotFoundException cnfe) {
             System.out.println(cnfe.toString());
         }
@@ -379,12 +340,6 @@ public class Peer2PeerClient extends Thread{
         /* 
          * Receive the game 
          */
-        try {       
-            in = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-
         Object gameNumber = null;
         try {
             gameNumber = in.readObject();
@@ -406,12 +361,6 @@ public class Peer2PeerClient extends Thread{
             }      
         } else {
             nextChoiceList.add((Choice)choice);
-        }
-        
-        try {
-            in.close();
-        } catch (IOException ex) {
-            System.err.println("error while closing the input stream");
         }
     }
     
@@ -512,9 +461,11 @@ public class Peer2PeerClient extends Thread{
      */
     private Integer handleConnection(Socket clientSocket) {
         ObjectInputStream in = null;
+        ObjectOutputStream out = null;
 
         try {
             in = new ObjectInputStream(clientSocket.getInputStream());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
@@ -527,16 +478,17 @@ public class Peer2PeerClient extends Thread{
         } catch (ClassNotFoundException cnfe) {
             System.out.println(cnfe.toString());
         }
-
+        
         if (!(input instanceof String)){
             System.err.println("Transmission error");
             System.exit(1);
         }
         
         if (input.equals("JOIN")) {
-            doJoin(clientSocket, new Peer(
+            doJoin(in, out, new Peer(
                     clientSocket.getInetAddress(),
                     clientSocket.getPort()));
+            System.out.println("Joined !");
         }
         if (input.equals("QUIT")) {
             doQuit(new Peer(
@@ -544,15 +496,16 @@ public class Peer2PeerClient extends Thread{
                     clientSocket.getPort()));
         }
         if (input.equals("PLAY")) {
-            doPlay(clientSocket);
+            doPlay(in, out);
         }
         if (input.equals("ADDME")) {
-            doAdd(clientSocket,new Peer(
+            doAdd(in, out ,new Peer(
                     clientSocket.getInetAddress(),
                     clientSocket.getPort()));
         }
         try {
             in.close();
+            out.close();
         } catch (IOException ex) {
             System.err.println("error while closing the input stream");
         }
@@ -658,10 +611,14 @@ public class Peer2PeerClient extends Thread{
             } catch (IOException ex) {
                 System.out.println(ex);
             }
-
-            /*
-             * close streams and socket
-             */
+            try {
+                /*
+                 * close streams and socket
+                 */
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                break;
+            }
             out.close();
             clientSocket.close();
         }
@@ -702,6 +659,7 @@ public class Peer2PeerClient extends Thread{
             try {
                 Socket clientSocket = serverSocket.accept();
                 handleConnection(clientSocket);
+                clientSocket.close();
             }catch (InterruptedIOException ex){
                 Thread.currentThread().interrupt();
                 break;
@@ -711,7 +669,7 @@ public class Peer2PeerClient extends Thread{
                 } else {
                     break;
                 }
-            }
+            }      
         }
         
     }
