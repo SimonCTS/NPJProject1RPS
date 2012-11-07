@@ -4,8 +4,6 @@
  */
 package rpsp2p;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -25,7 +23,7 @@ public class Peer2PeerClient extends Thread{
 
     private Integer localPort;
     private ArrayList<Peer> peerList;
-    private ArrayList<Peer> newPeerList;
+    private ArrayList<Peer> nextPeerList;
     private ArrayList<Choice> choiceList;
     private ArrayList<Choice> nextChoiceList;
     private Integer game;
@@ -45,7 +43,7 @@ public class Peer2PeerClient extends Thread{
             Window window) {
         this.localPort = port;
         this.peerList = new ArrayList<Peer>();
-        this.newPeerList = new ArrayList<Peer>();
+        this.nextPeerList = new ArrayList<Peer>();
         this.choiceList = new ArrayList<Choice>();
         this.nextChoiceList = new ArrayList<Choice>();
         this.game = 1;
@@ -94,9 +92,9 @@ public class Peer2PeerClient extends Thread{
         /*
          * send JOIN to its first Peer
          */
-        byte[] toTarget = "JOIN".getBytes();
+        String toTarget = "JOIN";
         try {
-            out.write(toTarget, 0, toTarget.length);
+            out.writeObject(toTarget);
             out.flush();
         } catch (IOException ex) {
             Logger.getLogger(Peer2PeerClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,6 +102,7 @@ public class Peer2PeerClient extends Thread{
 
         /*
          * receive a reponse of the first peer
+         * with the list of new peers
          */
         Object newPeerList = null;
         try {
@@ -199,10 +198,10 @@ public class Peer2PeerClient extends Thread{
             /*
              * send ADD ME (for the game number "game")
              */
-            toTarget = "ADDM".getBytes();
+            toTarget = "ADDME";
 
             try {
-                out.write(toTarget);
+                out.writeObject(toTarget);
                 out.flush();
                 out.writeObject(game);
                 out.flush();
@@ -220,12 +219,17 @@ public class Peer2PeerClient extends Thread{
             } catch (IOException ex) {
                 System.err.println(ex.toString());
             }
-        }
-        
+        }      
         return 0;
     }
 
-    
+    /**
+     * 
+     * add the new peer for the current game or the next game
+     * 
+     * @param clientSocket
+     * @param peer 
+     */
     private void doAdd(Socket clientSocket, Peer peer) {
         ObjectInputStream in = null;
 
@@ -264,7 +268,7 @@ public class Peer2PeerClient extends Thread{
             /*
              * add the new peer for the next game
              */
-            newPeerList.add(peer);
+            nextPeerList.add(peer);
         } else {
             System.err.println("Number game error in the connection");
             System.exit(1);
@@ -313,7 +317,7 @@ public class Peer2PeerClient extends Thread{
         }
         
         /*ADD THE RECEIVED PEER TO THE LIST*/
-        peerList.add(peer);
+        nextPeerList.add(peer);
         
 
     }
@@ -335,7 +339,7 @@ public class Peer2PeerClient extends Thread{
         ObjectInputStream in = null;
 
         /* 
-         * Receive the choie of the other host 
+         * Receive the choie of the other peers
          */
         try {       
             in = new ObjectInputStream(clientSocket.getInputStream());
@@ -382,7 +386,7 @@ public class Peer2PeerClient extends Thread{
           
         if (game == gameNumber) {
             choiceList.add((Choice)choice);
-            if (choiceList.size() == peerList.size() - 1) {
+            if ((choiceList.size() == peerList.size()) && (playerChoice != null)) {
                 endOfGame();
             }      
         } else {
@@ -418,18 +422,22 @@ public class Peer2PeerClient extends Thread{
         /*
          * Upadate peer list
          */
-        if (!(newPeerList.isEmpty())){
-            for (Iterator<Peer> it = newPeerList.iterator(); it.hasNext();) {
+        if (!(nextPeerList.isEmpty())){
+            for (Iterator<Peer> it = nextPeerList.iterator(); it.hasNext();) {
                 Peer newPeer = it.next();
                 peerList.add(newPeer);
             }
-            newPeerList.clear();
+            nextPeerList.clear();
         }
         /* 
          * Update choices for the next game 
          */
         choiceList = nextChoiceList;
         nextChoiceList.clear();
+        playerChoice = null;
+        /*
+         * Update score
+         */
         rpsWindow.setScore(score);
     }
     
@@ -488,21 +496,28 @@ public class Peer2PeerClient extends Thread{
      * @return
      */
     private Integer handleConnection(Socket clientSocket) {
-        BufferedInputStream in = null;
+        ObjectInputStream in = null;
 
         try {
-            in = new BufferedInputStream(clientSocket.getInputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
 
-        byte[] input = new byte[4];
+        Object input = null;
         try {
-            in.read(input, 0, input.length);
+            input =  in.readObject();
         } catch (IOException ex) {
             System.err.println("error in reading");
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println(cnfe.toString());
         }
 
+        if (!(input instanceof String)){
+            System.err.println("Transmission error");
+            System.exit(1);
+        }
+        
         if (input.equals("JOIN")) {
             doJoin(clientSocket, new Peer(
                     clientSocket.getInetAddress(),
@@ -516,7 +531,7 @@ public class Peer2PeerClient extends Thread{
         if (input.equals("PLAY")) {
             doPlay(clientSocket);
         }
-        if (input.equals("ADDM")) {
+        if (input.equals("ADDME")) {
             doAdd(clientSocket,new Peer(
                     clientSocket.getInetAddress(),
                     clientSocket.getPort()));
@@ -555,10 +570,10 @@ public class Peer2PeerClient extends Thread{
                         + peer.port);
             }
 
-            BufferedOutputStream out = null;
+            ObjectOutputStream out = null;
 
             try {
-                out = new BufferedOutputStream(clientSocket.getOutputStream());
+                out = new ObjectOutputStream(clientSocket.getOutputStream());
             } catch (IOException e) {
                 System.out.println(e.toString());
                 System.exit(1);
@@ -567,9 +582,9 @@ public class Peer2PeerClient extends Thread{
             /*
              * send bye
              */
-            byte[] toTarget = "QUIT".getBytes();
+            String toTarget = "QUIT";
             try {
-                out.write(toTarget, 0, toTarget.length);
+                out.writeObject(toTarget);
                 out.flush();
             } catch (IOException ex) {
                 System.out.println(ex);
@@ -595,6 +610,8 @@ public class Peer2PeerClient extends Thread{
      * @return Sends to all peers the choice of the local user
      */
     public Integer sendToPeers(Choice choice) throws IOException {
+        playerChoice =  choice;
+        
         for (Iterator<Peer> it = peerList.iterator(); it.hasNext();) {
             Peer peer = it.next();
             /*
@@ -622,10 +639,10 @@ public class Peer2PeerClient extends Thread{
             /*
              * send the choice
              */
-            byte[] toTarget = "PLAY".getBytes();
+            String toTarget = "PLAY";
 
             try {
-                out.write(toTarget);
+                out.writeObject(toTarget);
                 out.flush();
                 out.writeObject(choice);
                 out.flush();
@@ -645,6 +662,9 @@ public class Peer2PeerClient extends Thread{
         return 0;
     }
 
+    /*
+     * 
+     */
     public void run() {
         ServerSocket serverSocket = null;
 
