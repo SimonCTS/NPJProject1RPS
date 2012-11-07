@@ -74,7 +74,7 @@ public class Peer2PeerClient extends Thread{
      */
     private Integer connectToRing() {
         
-        
+        System.out.println("connectToRing");
         if (peerList.isEmpty()){
             /*if the list is empty, this is the first peer in the system*/
             return 0;
@@ -106,6 +106,7 @@ public class Peer2PeerClient extends Thread{
         /*
          * send JOIN to its first Peer
          */
+        System.out.println("send JOIN");
         String toTarget = "JOIN";
         try {
             out.writeObject(toTarget);
