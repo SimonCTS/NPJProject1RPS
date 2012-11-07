@@ -23,10 +23,7 @@ public class Peer2PeerClient extends Thread{
 
     private Integer localPort;
     private ArrayList<Peer> peerList;
-    private ArrayList<Peer> nextPeerList;
     private ArrayList<Choice> choiceList;
-    private ArrayList<Choice> nextChoiceList;
-    private Integer game;
     private Choice playerChoice;
     private Boolean listening;
     private Window rpsWindow;
@@ -44,10 +41,7 @@ public class Peer2PeerClient extends Thread{
             Window window) {
         this.localPort = port;
         this.peerList = new ArrayList<Peer>();
-        this.nextPeerList = new ArrayList<Peer>();
         this.choiceList = new ArrayList<Choice>();
-        this.nextChoiceList = new ArrayList<Choice>();
-        this.game = 1;
         this.playerChoice = null;
         this.listening = true;
         this.rpsWindow = window;
@@ -153,27 +147,6 @@ public class Peer2PeerClient extends Thread{
             peerList.add(peer);
         }
         
-        /*
-         * update its game number
-         */
-        Object number = null;
-        try
-        {
-            number = in.readObject();
-        } catch (IOException ex) {
-            System.err.println(ex.toString());
-        } catch (ClassNotFoundException cnfe) {
-            System.out.println(cnfe.toString());
-            return 1;
-        }
-        
-        if (!(number instanceof Integer)) {
-            System.err.println("Transmission error");
-            System.exit(1);            
-        }
-        
-        this.game = (Integer) number;
-        
         try {
             out.close();
             in.close();
@@ -215,8 +188,6 @@ public class Peer2PeerClient extends Thread{
             try {
                 out.writeObject(toTarget);
                 out.flush();
-                out.writeObject(game);
-                out.flush();
             } catch (IOException ex) {
                 System.out.println(ex);
             }
@@ -244,36 +215,7 @@ public class Peer2PeerClient extends Thread{
      */
     private void doAdd(ObjectInputStream in, ObjectOutputStream out, Peer peer) {
 
-        /* 
-         * Receive the game number of the new peer 
-         */
-
-        Object gameNumber = null;
-        try {
-            gameNumber = in.readObject();
-        } catch (IOException ex) {
-            System.err.println("error in reading");
-        } catch (ClassNotFoundException cnfe) {
-            System.out.println(cnfe.toString());
-        }
-        
-        if (! (gameNumber instanceof Integer)) {
-            System.err.println("Transmission error");
-            System.exit(1);
-        }
-        
-        if ((Integer)gameNumber == game) {
-            peerList.add(peer);
-        } if ((Integer)gameNumber == (game + 1)) {
-            /*
-             * add the new peer for the next game
-             */
-            nextPeerList.add(peer);
-        } else {
-            System.err.println("Number game error in the connection");
-            System.exit(1);
-        }
-        
+       peerList.add(peer);       
     }
     
     /**
@@ -291,15 +233,13 @@ public class Peer2PeerClient extends Thread{
         try {
             out.writeObject(peerList);
             out.flush();
-            out.writeObject(game+1);
-            out.flush();
         } catch (IOException ex) {
             System.out.println(ex.toString());
             System.exit(1);
         }
         
         /*ADD THE RECEIVED PEER TO THE LIST*/
-        nextPeerList.add(peer);
+        peerList.add(peer);
         
 
     }
@@ -337,31 +277,10 @@ public class Peer2PeerClient extends Thread{
             System.exit(1);
         }
         
-        /* 
-         * Receive the game 
-         */
-        Object gameNumber = null;
-        try {
-            gameNumber = in.readObject();
-        } catch (IOException ex) {
-            System.err.println("error in reading");
-        } catch (ClassNotFoundException cnfe) {
-            System.out.println(cnfe.toString());
-        }
-        
-        if (! (gameNumber instanceof Integer)) {
-            System.err.println("Transmission error");
-            System.exit(1);
-        }
-          
-        if (game == gameNumber) {
-            choiceList.add((Choice)choice);
-            if ((choiceList.size() == peerList.size()) && (playerChoice != null)) {
-                endOfGame();
-            }      
-        } else {
-            nextChoiceList.add((Choice)choice);
-        }
+        choiceList.add((Choice)choice);
+        if ((choiceList.size() == peerList.size()) && (playerChoice != null)) {
+            endOfGame();
+        }      
     }
     
     /**
@@ -379,25 +298,10 @@ public class Peer2PeerClient extends Thread{
                 score = score + 1;
             }
         }
-        /*
-         * Update number game
-         */
-        game = game + 1;
-        /*
-         * Upadate peer list
-         */
-        if (!(nextPeerList.isEmpty())){
-            for (Iterator<Peer> it = nextPeerList.iterator(); it.hasNext();) {
-                Peer newPeer = it.next();
-                peerList.add(newPeer);
-            }
-            nextPeerList.clear();
-        }
         /* 
          * Update choices for the next game 
          */
-        choiceList = nextChoiceList;
-        nextChoiceList.clear();
+        choiceList.clear();
         playerChoice = null;
         /*
          * Update score
@@ -605,8 +509,6 @@ public class Peer2PeerClient extends Thread{
                 out.writeObject(toTarget);
                 out.flush();
                 out.writeObject(choice);
-                out.flush();
-                out.writeObject(game);
                 out.flush();
             } catch (IOException ex) {
                 System.out.println(ex);
