@@ -23,7 +23,7 @@ public class Window extends javax.swing.JFrame {
     /**
      * Creates new form Window
      */
-    Peer2PeerClient p2pClient = new Peer2PeerClient(4443, this);
+    Peer2PeerClient p2pClient;
     Thread threadP2p;
 
     public Window() {
@@ -58,6 +58,8 @@ public class Window extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtLocalPort = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rock Paper Scissors");
@@ -131,6 +133,8 @@ public class Window extends javax.swing.JFrame {
 
         jLabel3.setText("Player Name");
 
+        jLabel4.setText("Local Port:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,7 +157,8 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtTotalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,18 +168,21 @@ public class Window extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnConnect, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtPlayerName, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtPort, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtIpAdress, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnDisconnect))
-                        .addGap(47, 47, 47))))
+                            .addComponent(btnConnect, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtPlayerName, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtPort, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtIpAdress, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDisconnect)
+                    .addComponent(txtLocalPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtLastScore, txtTotalScore});
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtIpAdress, txtLocalPort, txtPlayerName, txtPort});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,9 +198,13 @@ public class Window extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnScissors))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(labLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(txtLocalPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -257,6 +269,7 @@ public class Window extends javax.swing.JFrame {
         btnDisconnect.setVisible(!visible);
         txtIpAdress.setVisible(visible);
         txtPort.setVisible(visible);
+        txtLocalPort.setVisible(visible);
         txtPlayerName.setVisible(visible);
     }
     
@@ -267,6 +280,9 @@ public class Window extends javax.swing.JFrame {
     }
     
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+        p2pClient = new Peer2PeerClient(
+                        Integer.parseInt(txtLocalPort.getText()),
+                        this);
         if (!(txtIpAdress.getText().equals(""))) {
             try {
                 p2pClient.addPeer(
@@ -279,7 +295,6 @@ public class Window extends javax.swing.JFrame {
         setConnectionVisible(false);
         setGameVisible(true);
         labPlayerName.setText(txtPlayerName.getText());
-        
         threadP2p = new Thread(p2pClient);
         threadP2p.start();
    }//GEN-LAST:event_btnConnectActionPerformed
@@ -288,24 +303,27 @@ public class Window extends javax.swing.JFrame {
         Thread threadDeconnection = new Thread(new Peer2PeerSendDisconnect(p2pClient));
         threadDeconnection.start();
         threadP2p.interrupt();
+        this.setVisible(false);
         setConnectionVisible(true);
         setGameVisible(false);
     }//GEN-LAST:event_btnDisconnectActionPerformed
 
     private void btnRockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRockActionPerformed
+        p2pClient.setChoice(Choice.ROCK);
         this.setBtnEnable(false);
         Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.ROCK));
         threadSendPeer.start();
     }//GEN-LAST:event_btnRockActionPerformed
 
     private void btnPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaperActionPerformed
-        // ATTENTION, ON ENVOIE AVEC UNE COPIE DE P2PCLIENT
+        p2pClient.setChoice(Choice.PAPER);
         this.setBtnEnable(false);
         Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.PAPER));
         threadSendPeer.start();
     }//GEN-LAST:event_btnPaperActionPerformed
 
     private void btnScissorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScissorsActionPerformed
+        p2pClient.setChoice(Choice.SCISSORS);
         this.setBtnEnable(false);
         Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.SCISSORS));
         threadSendPeer.start();
@@ -361,12 +379,14 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel labGameState;
     private javax.swing.JLabel labLastScore;
     private javax.swing.JLabel labPlayerName;
     private javax.swing.JLabel labTotalScore;
     private javax.swing.JTextField txtIpAdress;
     private javax.swing.JTextField txtLastScore;
+    private javax.swing.JTextField txtLocalPort;
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JTextField txtPort;
     private javax.swing.JTextField txtTotalScore;
