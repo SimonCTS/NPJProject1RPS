@@ -4,10 +4,12 @@
  */
 package rpsgui;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import project1rps.Choice;
 import rpsp2p.Peer2PeerClient;
 
 /**
@@ -19,11 +21,12 @@ public class Window extends javax.swing.JFrame {
     /**
      * Creates new form Window
      */
-    
-    Peer2PeerClient p2pClient = new Peer2PeerClient(4444, this);
-    
+    Peer2PeerClient p2pClient = new Peer2PeerClient(4569, this);
+
     public Window() {
         initComponents();
+        setGameVisible(false);
+        setConnectionVisible(true);
     }
 
     /**
@@ -38,10 +41,10 @@ public class Window extends javax.swing.JFrame {
         btnRock = new javax.swing.JButton();
         btnPaper = new javax.swing.JButton();
         btnScissors = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        lastScore = new javax.swing.JTextField();
-        totalScore = new javax.swing.JTextField();
+        labLastScore = new javax.swing.JLabel();
+        labTotalScore = new javax.swing.JLabel();
+        txtLastScore = new javax.swing.JTextField();
+        txtTotalScore = new javax.swing.JTextField();
         labPlayerName = new javax.swing.JLabel();
         labGameState = new javax.swing.JLabel();
         btnDisconnect = new javax.swing.JButton();
@@ -49,34 +52,49 @@ public class Window extends javax.swing.JFrame {
         txtIpAdress = new javax.swing.JTextField();
         txtPlayerName = new javax.swing.JTextField();
         btnConnect = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rock Paper Scissors");
 
         btnRock.setText("Rock");
-
-        btnPaper.setText("Paper");
-
-        btnScissors.setText("Scissors");
-
-        jLabel1.setText("Last score:");
-
-        jLabel2.setText("Total:");
-
-        lastScore.setText("last score");
-        lastScore.addActionListener(new java.awt.event.ActionListener() {
+        btnRock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lastScoreActionPerformed(evt);
+                btnRockActionPerformed(evt);
             }
         });
 
-        totalScore.setText("total score");
-        totalScore.addActionListener(new java.awt.event.ActionListener() {
+        btnPaper.setText("Paper");
+        btnPaper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                totalScoreActionPerformed(evt);
+                btnPaperActionPerformed(evt);
+            }
+        });
+
+        btnScissors.setText("Scissors");
+        btnScissors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnScissorsActionPerformed(evt);
+            }
+        });
+
+        labLastScore.setText("Last score:");
+
+        labTotalScore.setText("Total:");
+
+        txtLastScore.setText("last score");
+        txtLastScore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLastScoreActionPerformed(evt);
+            }
+        });
+
+        txtTotalScore.setText("total score");
+        txtTotalScore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTotalScoreActionPerformed(evt);
             }
         });
 
@@ -85,17 +103,17 @@ public class Window extends javax.swing.JFrame {
         labGameState.setText("jLabel3");
 
         btnDisconnect.setText("Disconnect");
+        btnDisconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisconnectActionPerformed(evt);
+            }
+        });
 
-        txtPort.setText("Port");
-
-        txtIpAdress.setText("Ip address");
         txtIpAdress.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIpAdressActionPerformed(evt);
             }
         });
-
-        txtPlayerName.setText("Player name");
 
         btnConnect.setText("Connect");
         btnConnect.addActionListener(new java.awt.event.ActionListener() {
@@ -104,124 +122,190 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        jLabel1.setText("Ip address");
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jLabel2.setText("Port");
 
-        setJMenuBar(jMenuBar1);
+        jLabel3.setText("Player Name");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labPlayerName)
                             .addComponent(btnRock)
                             .addComponent(btnScissors)
                             .addComponent(btnPaper))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnConnect)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(labGameState)
-                                    .addComponent(jLabel1)
-                                    .addComponent(btnDisconnect)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(250, 250, 250)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPort, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
+                        .addGap(184, 184, 184)
+                        .addComponent(labLastScore))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(labTotalScore)
+                        .addGap(4, 4, 4)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(totalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTotalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labGameState))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnConnect, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtPlayerName, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtPort, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtIpAdress, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnDisconnect))
+                        .addGap(47, 47, 47))))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lastScore, totalScore});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtLastScore, txtTotalScore});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labPlayerName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(totalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(labPlayerName)
+                        .addGap(41, 41, 41)
                         .addComponent(btnRock)
                         .addGap(8, 8, 8)
-                        .addComponent(btnPaper))
-                    .addComponent(labGameState))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnScissors)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 23, Short.MAX_VALUE)
-                        .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPaper)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDisconnect)
-                    .addComponent(btnConnect))
-                .addContainerGap())
+                        .addComponent(btnScissors))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnDisconnect)
+                                    .addComponent(btnConnect)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtTotalScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labTotalScore))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labGameState)))))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lastScore, totalScore});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtLastScore, txtTotalScore});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lastScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastScoreActionPerformed
+    private void txtLastScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLastScoreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lastScoreActionPerformed
+    }//GEN-LAST:event_txtLastScoreActionPerformed
 
-    private void totalScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalScoreActionPerformed
+    private void txtTotalScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalScoreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_totalScoreActionPerformed
+    }//GEN-LAST:event_txtTotalScoreActionPerformed
 
     private void txtIpAdressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIpAdressActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIpAdressActionPerformed
 
-    public void setScore(Integer newScore){
-        
+    public void setScore(Integer newScore) {
+    }
+    private void setGameVisible(Boolean visible){
+        btnPaper.setVisible(visible);
+        btnRock.setVisible(visible);
+        btnScissors.setVisible(visible);
+        txtLastScore.setVisible(visible);
+        txtTotalScore.setVisible(visible);
+        labGameState.setVisible(visible);
+        labLastScore.setVisible(visible);
+        labPlayerName.setVisible(visible);
+        labTotalScore.setVisible(visible);
+    }
+
+    private void setConnectionVisible(Boolean visible){
+        btnConnect.setVisible(visible);
+        btnDisconnect.setVisible(!visible);
+        txtIpAdress.setVisible(visible);
+        txtPort.setVisible(visible);
+        txtPlayerName.setVisible(visible);
     }
     
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        try {
-            p2pClient.addPeer(
-                    InetAddress.getByName(txtIpAdress.getText()),
-                    Integer.parseInt(txtPort.getText()));
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        if (!(txtIpAdress.getText().equals(""))) {
+            try {
+                p2pClient.addPeer(
+                        InetAddress.getByName(txtIpAdress.getText()),
+                        Integer.parseInt(txtPort.getText()));
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        setConnectionVisible(false);
+        setGameVisible(true);
+        labPlayerName.setText(txtPlayerName.getText());
+        
         new Thread(p2pClient).start();
    }//GEN-LAST:event_btnConnectActionPerformed
+
+    private void btnDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconnectActionPerformed
+        try {
+            p2pClient.disconnect();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+        setConnectionVisible(true);
+        setGameVisible(false);
+    }//GEN-LAST:event_btnDisconnectActionPerformed
+
+    private void btnRockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRockActionPerformed
+        try {
+            p2pClient.sendToPeers(Choice.ROCK);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRockActionPerformed
+
+    private void btnPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaperActionPerformed
+        try {
+            p2pClient.sendToPeers(Choice.PAPER);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPaperActionPerformed
+
+    private void btnScissorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScissorsActionPerformed
+        try {
+            p2pClient.sendToPeers(Choice.SCISSORS);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnScissorsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,15 +356,15 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JButton btnScissors;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel labGameState;
+    private javax.swing.JLabel labLastScore;
     private javax.swing.JLabel labPlayerName;
-    private javax.swing.JTextField lastScore;
-    private javax.swing.JTextField totalScore;
+    private javax.swing.JLabel labTotalScore;
     private javax.swing.JTextField txtIpAdress;
+    private javax.swing.JTextField txtLastScore;
     private javax.swing.JTextField txtPlayerName;
     private javax.swing.JTextField txtPort;
+    private javax.swing.JTextField txtTotalScore;
     // End of variables declaration//GEN-END:variables
 }
