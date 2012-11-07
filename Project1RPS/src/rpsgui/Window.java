@@ -52,10 +52,10 @@ public class Window extends javax.swing.JFrame {
         txtIpAdress = new javax.swing.JTextField();
         txtPlayerName = new javax.swing.JTextField();
         btnConnect = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        labIpAdress = new javax.swing.JLabel();
+        labRemotePort = new javax.swing.JLabel();
+        labChangePlayerName = new javax.swing.JLabel();
+        labLocalPort = new javax.swing.JLabel();
         txtLocalPort = new javax.swing.JTextField();
         labScore = new javax.swing.JLabel();
         labTotal = new javax.swing.JLabel();
@@ -110,13 +110,13 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Ip address");
+        labIpAdress.setText("Ip address");
 
-        jLabel2.setText("Port");
+        labRemotePort.setText("Port");
 
-        jLabel3.setText("Player Name");
+        labChangePlayerName.setText("Player Name");
 
-        jLabel4.setText("Local Port:");
+        labLocalPort.setText("Local Port:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,15 +142,15 @@ public class Window extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(labScore)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
+                        .addComponent(labLocalPort))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(labTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labIpAdress, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labRemotePort, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labChangePlayerName, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnConnect, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,22 +184,22 @@ public class Window extends javax.swing.JFrame {
                                 .addComponent(labLastScore, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(labScore))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel4)
+                                .addComponent(labLocalPort)
                                 .addComponent(txtLocalPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtIpAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
+                                    .addComponent(labIpAdress))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
+                                    .addComponent(labRemotePort))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
+                                    .addComponent(labChangePlayerName))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnDisconnect)
@@ -240,6 +240,10 @@ public class Window extends javax.swing.JFrame {
         txtPort.setVisible(visible);
         txtLocalPort.setVisible(visible);
         txtPlayerName.setVisible(visible);
+        labLocalPort.setVisible(visible);
+        labRemotePort.setVisible(visible);
+        labChangePlayerName.setVisible(visible);
+        labIpAdress.setVisible(visible);
     }
     
     private void setBtnEnable(boolean enable){
@@ -345,12 +349,12 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JButton btnPaper;
     private javax.swing.JButton btnRock;
     private javax.swing.JButton btnScissors;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel labChangePlayerName;
+    private javax.swing.JLabel labIpAdress;
     private javax.swing.JLabel labLastScore;
+    private javax.swing.JLabel labLocalPort;
     private javax.swing.JLabel labPlayerName;
+    private javax.swing.JLabel labRemotePort;
     private javax.swing.JLabel labScore;
     private javax.swing.JLabel labTotal;
     private javax.swing.JLabel labTotalScore;

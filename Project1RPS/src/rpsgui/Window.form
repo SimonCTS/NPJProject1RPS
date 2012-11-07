@@ -47,16 +47,16 @@
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Component id="labScore" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <Component id="labLocalPort" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="labTotal" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="259" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="labIpAdress" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="labRemotePort" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="labChangePlayerName" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="btnConnect" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -96,7 +96,7 @@
                               <Component id="labScore" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labLocalPort" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtLocalPort" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -105,17 +105,17 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtIpAdress" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labIpAdress" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtPort" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labRemotePort" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtPlayerName" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labChangePlayerName" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -200,22 +200,22 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="labIpAdress">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ip address"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="labRemotePort">
       <Properties>
         <Property name="text" type="java.lang.String" value="Port"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
+    <Component class="javax.swing.JLabel" name="labChangePlayerName">
       <Properties>
         <Property name="text" type="java.lang.String" value="Player Name"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel4">
+    <Component class="javax.swing.JLabel" name="labLocalPort">
       <Properties>
         <Property name="text" type="java.lang.String" value="Local Port:"/>
       </Properties>
