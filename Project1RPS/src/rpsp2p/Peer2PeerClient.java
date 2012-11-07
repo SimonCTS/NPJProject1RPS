@@ -604,14 +604,16 @@ public class Peer2PeerClient extends Thread{
         return 0;
     }
 
+    public void setChoice(Choice choice) {
+        playerChoice = choice;
+    }
+    
     /**
      *
      * @param choice
      * @return Sends to all peers the choice of the local user
      */
-    public Integer sendToPeers(Choice choice) throws IOException {
-        playerChoice =  choice;
-        
+    public Integer sendToPeers(Choice choice) throws IOException {        
         for (Iterator<Peer> it = peerList.iterator(); it.hasNext();) {
             Peer peer = it.next();
             /*
