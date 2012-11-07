@@ -43,6 +43,12 @@ public class Peer2PeerClient extends Thread{
         this.rpsWindow = window;
     }
 
+    public Peer2PeerClient(Peer2PeerClient peer){
+        this.localPort = peer.localPort;
+        this.peerList = peer.peerList;
+        this.rpsWindow = peer.rpsWindow;
+        this.serverSocket = peer.serverSocket;
+    }
     
     public void addPeer(InetAddress ipAddress, Integer remotePort){
         this.peerList.add(new Peer(ipAddress,remotePort));
@@ -327,7 +333,6 @@ public class Peer2PeerClient extends Thread{
              */
             out.close();
             clientSocket.close();
-
         }
         return 0;
     }
@@ -366,8 +371,11 @@ public class Peer2PeerClient extends Thread{
                 Thread.currentThread().interrupt();
                 break;
             } catch (IOException ex) {
-                System.err.print("Connection error on port: " + localPort);
-                break;
+                if (!isInterrupted()){
+                    System.err.print("Connection error on port: " + localPort);
+                } else {
+                    break;
+                }
             }
         }
         

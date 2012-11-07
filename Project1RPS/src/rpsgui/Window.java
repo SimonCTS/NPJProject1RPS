@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import project1rps.Choice;
 import rpsp2p.Peer2PeerClient;
+import rpsp2p.Peer2PeerSendChoice;
+import rpsp2p.Peer2PeerSendDisconnect;
 
 /**
  *
@@ -236,6 +238,7 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIpAdressActionPerformed
 
     public void setScore(Integer newScore) {
+        //set le score + pop-up continuer/quitter + eventuellement degriser
     }
     public void setGameVisible(Boolean visible){
         btnPaper.setVisible(visible);
@@ -257,6 +260,12 @@ public class Window extends javax.swing.JFrame {
         txtPlayerName.setVisible(visible);
     }
     
+    private void setBtnEnable(boolean enable){
+        btnPaper.setEnabled(enable);
+        btnRock.setEnabled(enable);
+        btnScissors.setEnabled(enable);
+    }
+    
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         if (!(txtIpAdress.getText().equals(""))) {
             try {
@@ -276,38 +285,30 @@ public class Window extends javax.swing.JFrame {
    }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconnectActionPerformed
-        try {
-            threadP2p.interrupt();
-            p2pClient.disconnect();
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
+        Thread threadDeconnection = new Thread(new Peer2PeerSendDisconnect(p2pClient));
+        threadDeconnection.start();
+        threadP2p.interrupt();
         setConnectionVisible(true);
         setGameVisible(false);
     }//GEN-LAST:event_btnDisconnectActionPerformed
 
     private void btnRockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRockActionPerformed
-        try {
-            p2pClient.sendToPeers(Choice.ROCK);
-        } catch (IOException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.setBtnEnable(false);
+        Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.ROCK));
+        threadSendPeer.start();
     }//GEN-LAST:event_btnRockActionPerformed
 
     private void btnPaperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaperActionPerformed
-        try {
-            p2pClient.sendToPeers(Choice.PAPER);
-        } catch (IOException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // ATTENTION, ON ENVOIE AVEC UNE COPIE DE P2PCLIENT
+        this.setBtnEnable(false);
+        Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.PAPER));
+        threadSendPeer.start();
     }//GEN-LAST:event_btnPaperActionPerformed
 
     private void btnScissorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScissorsActionPerformed
-        try {
-            p2pClient.sendToPeers(Choice.SCISSORS);
-        } catch (IOException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.setBtnEnable(false);
+        Thread threadSendPeer = new Thread(new Peer2PeerSendChoice(p2pClient, Choice.SCISSORS));
+        threadSendPeer.start();
     }//GEN-LAST:event_btnScissorsActionPerformed
 
     /**
