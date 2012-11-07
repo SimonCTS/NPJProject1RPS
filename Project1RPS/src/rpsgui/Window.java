@@ -251,6 +251,8 @@ public class Window extends javax.swing.JFrame {
 
     public void setScore(Integer newScore) {
         //set le score + pop-up continuer/quitter + eventuellement degriser
+        txtTotalScore.setText(newScore.toString());
+        setBtnEnable(true);
     }
     public void setGameVisible(Boolean visible){
         btnPaper.setVisible(visible);
