@@ -209,10 +209,14 @@ public class Peer2PeerClient extends Thread {
             } catch (IOException ex) {
                 System.out.println(ex);
             }
-
-            /*
-             * Close socket
-             */
+            try {
+                /*
+                 * Close socket
+                 */
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Peer2PeerClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
             try {
                 out.close();
                 newClientSocket.close();
@@ -588,7 +592,7 @@ public class Peer2PeerClient extends Thread {
                 /*
                  * close streams and socket
                  */
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 break;
             }
