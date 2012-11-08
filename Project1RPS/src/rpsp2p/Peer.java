@@ -9,10 +9,12 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 /**
- *
- * @author fingolfin
+ * Class recording the element Peer. A peer includes an Ip Adress and a Port.
+ * 
+ * @author Zoé Bellot, Simon Cathébras
  */
-public class Peer implements Serializable{
+public class Peer implements Serializable {
+
     InetAddress ipAdress;
     Integer port;
 
@@ -20,4 +22,14 @@ public class Peer implements Serializable{
         this.ipAdress = ipAdress;
         this.port = localPort;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Peer) {
+            return ((this.ipAdress.equals(((Peer) o).ipAdress)) && (this.port.equals(((Peer) o).port)));
+        }
+        return false;
+    }
+
+
 }

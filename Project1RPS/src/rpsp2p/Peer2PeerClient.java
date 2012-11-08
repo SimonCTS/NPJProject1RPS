@@ -14,7 +14,7 @@ import project1rps.Choice;
 import rpsgui.Window;
 
 /**
- *
+ * Threaded class, runs the listening socket to all potential incoming requests
  * @author Simon Cathebras, Zoe Bellot
  */
 public class Peer2PeerClient extends Thread {
@@ -23,16 +23,13 @@ public class Peer2PeerClient extends Thread {
     private ArrayList<Peer> peerList;
     private ArrayList<Choice> choiceList;
     private Choice playerChoice;
-    private Boolean listening;
     private Window rpsWindow;
     private ServerSocket serverSocket;
 
     /**
-     *
-     * @param playerName
-     * @param remoteIpAdress
-     * @param remotePort
-     * @param port
+     * Generate a PeerToPeerClient.
+     * @param port Local port where the server socket will listen.
+     * @param window GUI Window.
      */
     public Peer2PeerClient(
             Integer port,
@@ -41,10 +38,13 @@ public class Peer2PeerClient extends Thread {
         this.peerList = new ArrayList<Peer>();
         this.choiceList = new ArrayList<Choice>();
         this.playerChoice = null;
-        this.listening = true;
         this.rpsWindow = window;
     }
 
+    /**
+     * Generate a Peer2PeerClient as a copy of peer.
+     * @param peer P2Pclient to be copied.
+     */
     public Peer2PeerClient(Peer2PeerClient peer) {
         this.localPort = peer.localPort;
         this.peerList = peer.peerList;
@@ -52,6 +52,11 @@ public class Peer2PeerClient extends Thread {
         this.serverSocket = peer.serverSocket;
     }
 
+    /**
+     * Add a new peer corresponding to Ip Adress and port in parameters to peerList.
+     * @param ipAddress
+     * @param remotePort 
+     */
     public void addPeer(InetAddress ipAddress, Integer remotePort) {
         this.peerList.add(new Peer(ipAddress, remotePort));
     }
@@ -312,7 +317,8 @@ public class Peer2PeerClient extends Thread {
             System.err.println("Error in reading peer " + ex.toString());
         }
         if(peer instanceof Peer){
-            peerList.remove((Peer) peer);
+           // boolean bool = peerList.get(0).equals(peer);
+            peerList.remove(peerList.indexOf((Peer) peer));
         }else{
             System.err.println("misreading of peer !");
             System.exit(1);
@@ -478,10 +484,9 @@ public class Peer2PeerClient extends Thread {
     }
 
     /**
-     * Sends to each peer member within peerList an "end of game" message
-     *
-     * @param peerList
-     * @return error code
+     * Broadcast "QUIT" message to all other peers.
+     * 
+     * @throws IOException 
      */
     public void disconnect() throws IOException {
         InetAddress localAdress = java.net.InetAddress.getLocalHost();
@@ -538,6 +543,11 @@ public class Peer2PeerClient extends Thread {
 
     }
 
+    /**
+     * Set the current player's choice.
+     * 
+     * @param choice Choice to be choosed
+     */
     public void setChoice(Choice choice) {
         playerChoice = choice;
         if ((choiceList.size() == peerList.size())) {
@@ -545,10 +555,12 @@ public class Peer2PeerClient extends Thread {
         } 
     }
 
+ 
     /**
-     *
-     * @param choice
-     * @return Sends to all peers the choice of the local user
+     * Sends to all peers the choice of the local user.
+     * @param choice The choice to be send
+     * @return error code
+     * @throws IOException 
      */
     public Integer sendToPeers(Choice choice) throws IOException {
         for (Iterator<Peer> it = peerList.iterator(); it.hasNext();) {

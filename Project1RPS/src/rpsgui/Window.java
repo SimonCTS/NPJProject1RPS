@@ -16,8 +16,9 @@ import rpsp2p.Peer2PeerSendChoice;
 import rpsp2p.Peer2PeerSendDisconnect;
 
 /**
- *
- * @author fingolfin
+ * GUI Class, Contains the connexion control system, and the game control system.
+ * 
+ * @author Simon Cathébras, Zoé Bellot
  */
 public class Window extends javax.swing.JFrame {
 
@@ -220,6 +221,11 @@ public class Window extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIpAdressActionPerformed
 
+    /**
+     * Set the new score and the total score in the GUI.
+     * Enable also the game's selection buttons.
+     * @param newScore Score of the last played game.
+     */
     public void setScore(Integer newScore) {
         //set le score + pop-up continuer/quitter + eventuellement degriser
         totalScore = totalScore + newScore;
@@ -227,7 +233,8 @@ public class Window extends javax.swing.JFrame {
         labTotal.setText(totalScore.toString());
         setBtnEnable(true);
     }
-    public void setGameVisible(Boolean visible){
+    
+    private void setGameVisible(Boolean visible){
         btnPaper.setVisible(visible);
         btnRock.setVisible(visible);
         btnScissors.setVisible(visible);
@@ -238,7 +245,7 @@ public class Window extends javax.swing.JFrame {
         labTotalScore.setVisible(visible);
     }
 
-    public void setConnectionVisible(Boolean visible){
+    private void setConnectionVisible(Boolean visible){
         btnConnect.setVisible(visible);
         btnDisconnect.setVisible(!visible);
         txtIpAdress.setVisible(visible);

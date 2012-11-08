@@ -4,7 +4,6 @@
  */
 package project1rps;
 
-import rpsgui.ConnectWindow;
 import rpsgui.Window;
 
 /**

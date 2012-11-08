@@ -5,8 +5,9 @@
 package project1rps;
 
 /**
- *
- * @author fingolfin
+ * Enumerate type for the game's possibilities.
+ * 
+ * @author Zoé Bellot, Simon Cathébras
  */
 public enum Choice {
     ROCK, PAPER, SCISSORS  

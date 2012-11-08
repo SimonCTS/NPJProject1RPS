@@ -10,11 +10,15 @@ import java.util.logging.Logger;
 import rpsgui.Window;
 
 /**
- *
- * @author fingolfin
+ * Threaded class, used to send disconnection message to all other peers in the ring.
+ * @author Zoé Bellot, Simon Cathébras
  */
 public class Peer2PeerSendDisconnect extends Peer2PeerClient{
 
+    /**
+     * Create a P2PDisconnect object.
+     * @param peer 
+     */
     public Peer2PeerSendDisconnect(Peer2PeerClient peer) {
         super(peer);
     }

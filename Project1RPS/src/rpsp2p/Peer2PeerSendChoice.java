@@ -11,12 +11,18 @@ import project1rps.Choice;
 import rpsgui.Window;
 
 /**
- *
- * @author fingolfin
+ * Threaded class, used to send a choice to all other peers in the ring.
+ * @author Zoé Bellot, Simon Cathébras
  */
 public class Peer2PeerSendChoice extends Peer2PeerClient {
     private Choice choice;
 
+    /**
+     * Creates a P2PSendChoice.
+     * 
+     * @param peer Peer to copy.
+     * @param choice Choice to send.
+     */
     public Peer2PeerSendChoice(Peer2PeerClient peer, Choice choice) {
         super(peer);
         this.choice = choice;
