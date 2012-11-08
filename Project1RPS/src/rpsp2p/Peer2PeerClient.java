@@ -536,6 +536,9 @@ public class Peer2PeerClient extends Thread {
 
     public void setChoice(Choice choice) {
         playerChoice = choice;
+        if ((choiceList.size() == peerList.size())) {
+            endOfGame();
+        } 
     }
 
     /**
